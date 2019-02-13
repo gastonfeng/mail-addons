@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 class MailMail(osv.Model):
     _inherit = "mail.mail"
 
-    def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
+    def send(self,  ids, auto_commit=False, raise_exception=False, context=None):
         # copy-paste from addons/mail/mail_mail.py
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -36,9 +36,9 @@ class MailMail(osv.Model):
         """
 
         # NEW STUFF
-        catchall_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.alias_from", context=context)
-        catchall_alias_name = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.name_alias_from", context=context)
-        catchall_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+        catchall_alias = self.pool['ir.config_parameter'].get_param( "mail.catchall.alias_from", context=context)
+        catchall_alias_name = self.pool['ir.config_parameter'].get_param( "mail.catchall.name_alias_from", context=context)
+        catchall_domain = self.pool['ir.config_parameter'].get_param( "mail.catchall.domain", context=context)
 
         correct_email_from = r'@%s>?\s*$' % catchall_domain
         default_email_from = '%s@%s' % (catchall_alias, catchall_domain)
@@ -68,13 +68,13 @@ class MailMail(osv.Model):
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if mail.email_to:
-                    email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
+                    email_list.append(self.send_get_email_dict( mail, context=context))
                 for partner in mail.recipient_ids:
-                    email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
+                    email_list.append(self.send_get_email_dict( mail, partner=partner, context=context))
                 # headers
                 headers = {}
-                bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
-                catchall_domain = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.catchall.domain", context=context)
+                bounce_alias = self.pool['ir.config_parameter'].get_param( "mail.bounce.alias", context=context)
+                catchall_domain = self.pool['ir.config_parameter'].get_param( "mail.catchall.domain", context=context)
                 if bounce_alias and catchall_domain:
                     if mail.model and mail.res_id:
                         headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
@@ -119,7 +119,7 @@ class MailMail(osv.Model):
                         subtype_alternative='plain',
                         headers=headers)
                     try:
-                        res = ir_mail_server.send_email(cr, uid, msg,
+                        res = ir_mail_server.send_email( msg,
                                                         mail_server_id=mail.mail_server_id.id,
                                                         context=context)
                     except AssertionError as error:
@@ -140,7 +140,7 @@ class MailMail(osv.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
-                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
+                self._postprocess_sent_message( mail, context=context, mail_sent=mail_sent)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -151,7 +151,7 @@ class MailMail(osv.Model):
             except Exception as e:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})
-                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=False)
+                self._postprocess_sent_message( mail, context=context, mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException
