@@ -3,8 +3,9 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
-from odoo.http import request
 from odoo.addons.bus.controllers.main import BusController
+
+from odoo.http import request
 
 
 class MailChatController(BusController):

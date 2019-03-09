@@ -4,8 +4,8 @@ import logging
 import re
 from email.utils import formataddr
 
-from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp import tools
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv
 from openerp.tools.safe_eval import safe_eval as eval

@@ -6,11 +6,11 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import api
+from odoo import exceptions
 from odoo import fields
 from odoo import models
 from odoo.tools import email_split
 from odoo.tools.translate import _
-from odoo import exceptions
 
 
 class Wizard(models.TransientModel):

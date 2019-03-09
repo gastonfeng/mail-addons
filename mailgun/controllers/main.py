@@ -1,6 +1,7 @@
+import re
+
 from odoo import http
 from odoo.http import request
-import re
 
 
 class MailMailgun(http.Controller):

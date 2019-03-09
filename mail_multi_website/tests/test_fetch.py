@@ -1,8 +1,9 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 from odoo.addons.mail.tests.common import TestMail
-from odoo.tools import mute_logger
 from odoo.addons.mail.tests.test_mail_gateway import MAIL_TEMPLATE
+
+from odoo.tools import mute_logger
 
 
 class TestFetch(TestMail):

@@ -1,10 +1,9 @@
 import datetime
 
-from openerp.tools.translate import _
-from openerp import tools
-
 from openerp import exceptions
 from openerp import models, fields, api
+from openerp import tools
+from openerp.tools.translate import _
 
 
 class FetchMailServer(models.Model):
